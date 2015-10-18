@@ -9,89 +9,256 @@
     <script src='https://cdn.firebase.com/js/client/2.2.1/firebase.js'></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.min.js"></script>
     <script src='angularfire.min.js'></script>
+
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="bootstrap-theme.css">
+    <link rel="stylesheet" type="text/css" href="line-icons.css">
+    <link rel="stylesheet" type="text/css" href="style.css">
     <title>Firebase/Angular App</title>
     <style>
+   
     td {
         height: 51px;
+        vertical-align: middle!important;
+
+    }
+    .container-fluid {
+        padding-top: 100px;
+    }
+    .header .btn {
+        margin-top: 10px;
+    }
+    .notification-row {
+        margin-left: 15px;
+    }
+    .no-padding-left {
+        padding-left: 0;
+    }
+    .no-padding-right {
+        padding-right: 0;
+    }
+    .no-padding {
+        padding: 0;
     }
     </style>
 </head>
 
 <body ng-controller='BaseController'>
-    <div class="container">
-        <table class="table">
-            <thead>
-                <tr>
-                    <th class="col-md-4">Name</th>
-                    <th class="col-md-6">Text</th>
-                    <th class="col-md-1"></th>
-                    <th class="col-md-1"></th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr ng-repeat="user in users">
-                    <td>
-                        <span class='userName'>{{ user.name }}</span>
-
-                    </td>
-                    <td>
-                        <span class='userText'>{{ user.text }}</span>
-
-                    </td>
-                    <td><i class="glyphicon glyphicon-pencil" ng-click='showModal()'> </i>
-                        <div class="modal fade"  tabindex="-1" role="dialog">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                        <h4 class="modal-title">Edytuj dane</h4>
-                                    </div>
-                                    <div class="modal-body">
-                                        <form ng-submit="users.$save(user)">
-                                            <div class="form-group">
-                                                <input type="text" ng-model="user.name" placeholder="Name" class="form-control" />
+    <header class="header dark-bg">
 
 
-                                            </div>
-                                            <div class="form-group">
-                                                <input type='text' ng-model="user.text" placeholder="Text" class="form-control">
-                                            </div>
+        <!--logo start-->
+        <a href="index.html" class="logo">Nurse<span class="lite">CRM</span></a>
+        <!--logo end-->
 
 
-                                            <button id="add" class="btn btn-primary" type="Submit" ng-click='dismissModal()'>Add</button>
-                                        </form>
-                                    </div>
 
-                                </div>
-                                <!-- /.modal-content -->
+        <div class="top-nav notification-row pull-right">
+            <!-- notificatoin dropdown start-->
+            <ul class="nav pull-right top-menu">
+
+                <!-- user login dropdown start-->
+                <li class="dropdown">
+                    <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+
+                        <span class="username">Anna Pielęgniarska</span>
+                        <b class="caret"></b>
+                    </a>
+                    <ul class="dropdown-menu extended logout">
+                        <div class="log-arrow-up"></div>
+                        <li class="eborder-top">
+                            <a href="#"><i class="icon_profile"></i> My Profile</a>
+                        </li>
+                        <li>
+                            <a href="#"><i class="icon_mail_alt"></i> My Inbox</a>
+                        </li>
+                        <li>
+                            <a href="#"><i class="icon_clock_alt"></i> Timeline</a>
+                        </li>
+                        <li>
+                            <a href="#"><i class="icon_chat_alt"></i> Chats</a>
+                        </li>
+                        <li>
+                            <a href="login.html"><i class="icon_key_alt"></i> Log Out</a>
+                        </li>
+
+                    </ul>
+                </li>
+                <!-- user login dropdown end -->
+            </ul>
+            <!-- notificatoin dropdown end-->
+        </div>
+        <button class='btn btn-success pull-right' data-toggle="modal" data-target="#newStudent" ng-click="showModal()">Nowy uczeń</button>
+    </header>
+    <div class="container-fluid">
+
+        <div class="modal fade" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" id='newStudent'>
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Nowy uczeń</h4>
+                    </div>
+                    <div class='modal-body'>
+                        <form ng-submit="addUser()" name='newUserForm'>
+                            <h4>Dane podstawowe</h4>
+                            <div class="form-group">
+                                <input type="text" ng-model="userLastName" placeholder="Nazwisko" class="form-control userLastName" />
+
+
                             </div>
-                            <!-- /.modal-dialog -->
-                        </div>
-                        <!-- /.modal -->
-                    </td>
-                    <td><i class="glyphicon glyphicon-trash" ng-click="users.$remove(user)"></i>
-                    </td>
-
-                </tr>
-            </tbody>
-        </table>
-        <div class="col-md-4 col-md-offset-2">
-            <form ng-submit="addUser()">
-                <div class="form-group">
-                    <input type="text" ng-model="userName" placeholder="Name" class="form-control userName" />
+                            <div class="form-group">
+                                <input type="text" ng-model="userFirstName" placeholder="Imię" class="form-control useFirstName" />
 
 
+                            </div>
+                            <div class="form-group">
+                                <input type='text' ng-model="userPesel" placeholder="Pesel" class="form-control userPesel">
+                            </div>
+                            <div class="form-group">
+                                <input type='text' ng-model="userBirthDate" placeholder="Data urodzenia" class="form-control userDate">
+                            </div>
+                            <div class="form-group">
+                                <input type='text' ng-model="userClass" placeholder="Klasa (np. 1A)" class="form-control userClass">
+                            </div>
+                            <h4>Dane teleadresowe</h4>
+                            <div class="form-group col-md-3 no-padding">
+                                <input type="text" ng-model="userPostCode" placeholder="Kod pocztowy" class="form-control userPostCode" />
+                            </div>
+                            <div class="form-group col-md-9 no-padding-right">
+                                <input type="text" ng-model="userCity" placeholder="Miesjcowość" class="form-control userCity" />
+                            </div>
+                            <div class="form-group col-md-8 no-padding">
+                                <input type="text" ng-model="userStreet" placeholder="Ulica" class="form-control userStreet" />
+                            </div>
+                            <div class="form-group col-md-4 no-padding-right">
+                                <input type="text" ng-model="userLocal" placeholder="Nr lokalu" class="form-control userLocal" />
+                            </div>
+                            <div class="form-group">
+                                <input type="text" ng-model="userPhone" placeholder="Telefon" class="form-control userPhone" />
+                            </div>
+
+                            <button id="add" class="btn btn-primary" type="Submit" ng-click='dismissModal()'>Dodaj ucznia</button>
+                            <button class='btn btn-deafult' data-dismiss="modal" ng-click='clearFormValues()'>Anuluj</button>
+                        </form>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <input type='text' ng-model="userText" placeholder="Text" class="form-control userText">
-                </div>
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+
+            <div class="panel-heading">
+                <h2>
+                    <strong>Lista uczniów</strong>
+                </h2>
+
+            </div>
+            <div class="panel-body">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th class="col-md-2">Nazwisko</th>
+                            <th class="col-md-2">Imię</th>
+                            <th class="col-md-2">Pesel</th>
+                            <th class="col-md-2">Klasa</th>
+                            <th class="col-md-1 text-center">Dodaj wpis</th>
+                            <th class="col-md-1 text-center">Zobacz pełen profil</th>
+                            <th class="col-md-1 text-center">Edytuj dane</th>
+                            <th class="col-md-1 text-center">Usuń</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="user in users">
+                            <td>
+                                <span class='userName'>{{ user.lastName }}</span>
+
+                            </td>
+                            <td>
+                                <span class='userName'>{{ user.firstName }}</span>
+
+                            </td>
+                            <td>
+                                <span class='userText'>{{ user.pesel }}</span>
+
+                            </td>
+                            <td>
+                                <span class='userText'>{{ user.studentClass }}</span>
+
+                            </td>
+                            <td class="text-center"><button class='btn btn-success'><i class='glyphicon glyphicon-plus'></i></button></td>
+                            <td class="text-center"><button class='btn btn-info'><i class='glyphicon glyphicon-copy'></i></button></td>
+                            <td class="text-center">
+                                <button class='btn btn-primary' ng-click='showUserModal(user.$id)'><i class="glyphicon glyphicon-pencil"> </i>
+                                </button>
+                                <div class="modal fade" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h4 class="modal-title">Edytuj dane</h4>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form ng-submit="users.$save(user)" name="myForm">
+                                                    <h4>Dane podstawowe</h4>
+                                                    <div class="form-group">
+                                                        <input type="text" ng-model="user.lastName" placeholder="Nazwisko" class="form-control userLastName" />
 
 
-                <button id="add" class="btn btn-primary" type="Submit">Add</button>
-            </form>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <input type="text" ng-model="user.firstName" placeholder="Imię" class="form-control userFirstName" />
+
+
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <input type='text' ng-model="user.pesel" placeholder="Pesel" class="form-control userPesel" ng-blur="transformPesel(user.pesel, user.$id)">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <input type='text' ng-model="user.birthDate" placeholder="Data urodzenia" class="form-control userDate">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <input type='text' ng-model="user.studentClass" placeholder="Klasa (np. 1A)" class="form-control userClass">
+                                                    </div>
+                                                    <h4>Dane teleadresowe</h4>
+                                                    <div class="form-group col-md-3 no-padding">
+                                                        <input type="text" ng-model="user.postCode" placeholder="Kod pocztowy" class="form-control userPostCode" />
+                                                    </div>
+                                                    <div class="form-group col-md-9 no-padding-right">
+                                                        <input type="text" ng-model="user.city" placeholder="Miesjcowość" class="form-control userCity" />
+                                                    </div>
+                                                    <div class="form-group col-md-8 no-padding">
+                                                        <input type="text" ng-model="user.street" placeholder="Ulica" class="form-control userStreet" />
+                                                    </div>
+                                                    <div class="form-group col-md-4 no-padding-right">
+                                                        <input type="text" ng-model="user.local" placeholder="Nr lokalu" class="form-control userLocal" />
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <input type="text" ng-model="user.phone" placeholder="Telefon" class="form-control userPhone" />
+                                                    </div>
+
+
+                                                    <button id="add" class="btn btn-primary" type="Submit" ng-click='dismissModal()'>Zapisz zmiany</button>
+                                                    <button class='btn btn-default' ng-click="cancelForm()" data-dismiss="modal" type='button'>Anuluj</button>
+                                                </form>
+                                            </div>
+
+                                        </div>
+                                        <!-- /.modal-content -->
+                                    </div>
+                                    <!-- /.modal-dialog -->
+                                </div>
+                                <!-- /.modal -->
+                            </td>
+                            <td class="text-center">
+                                <button class='btn btn-deafult' ng-click="users.$remove(user)"><i class="glyphicon glyphicon-trash"></i>
+                                </button>
+                            </td>
+
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
+
         </div>
 
     </div>
@@ -99,78 +266,122 @@
     <script>
     var app = angular.module("firebaseApp", ["firebase"]);
     app.controller("BaseController", function($scope, $firebaseArray) {
-        var ref = new Firebase("https://intense-torch-2051.firebaseio.com/");
+        var ref = new Firebase("https://intense-torch-2051.firebaseio.com/"),
+            it,
+            firstNameInput,
+            lastNameInput,
+            peselInput,
+            birthInput,
+            classInput,
+            codeInput,
+            cityInput,
+            streetInput,
+            localInput,
+            phoneInput;
         $scope.users = $firebaseArray(ref);
+        $scope.clearFormValues = function() {
 
-        $scope.editUser = function(id) {
 
-            item = $scope.users.$getRecord(id);
-            //$scope.userName = item.name;
-            //$scope.userText = item.text;
-            //item.name = nameInput.val();
-            //item.text = textInput.val();
-            /*$scope.users.$save(item).then(function() {
-                console.log('done');
-            });*/
+            $scope.newUserForm.$setPristine();
+            $scope.userLastName = "";
+            $scope.userFirstName = "";
+            $scope.userPesel = "";
+            $scope.userBirthDate = "";
+            $scope.userClass = "";
+            $scope.userPostCode = "";
+            $scope.userCity = "";
+            $scope.userStreet = "";
+            $scope.userLocal = "";
+            $scope.userPhone = "";
+
+
         };
+
+
         $scope.addUser = function() {
 
+
+
             $scope.users.$add({
-                name: $scope.userName,
-                text: $scope.userText
+                lastName: $scope.userLastName,
+                firstName: $scope.userFirstName,
+                pesel: $scope.userPesel,
+                birthDate: $scope.userBirthDate,
+                studentClass: $scope.userClass,
+                postCode: $scope.userPostCode,
+                city: $scope.userCity,
+                street: $scope.userStreet,
+                local: $scope.userLocal,
+                phone: $scope.userPhone
+
             });
 
+            $scope.clearFormValues();
 
         };
-        $scope.dismissModal = function() {
-            
-            $('.modal').modal('hide');
-            
-                
-        };
-        $scope.showModal = function(){
-           $(event.target).parent().parent().find(".modal").modal('show');
+        $scope.transformPesel = function(pesel, id) {
+
+            var year,
+                month;
+            if (pesel.substring(2, 4) < 13) {
+                year = "19" + pesel.substring(0, 2);
+                month = pesel.substring(2, 4);
+
+            } else {
+                year = "20" + pesel.substring(0, 2);
+                month = pesel.substring(2, 4) - 20;
+            }
+            var bDate = pesel.substring(4, 6) + " " + month + " " + year;
+            $scope.users.$getRecord(id).birthDate = bDate;
         }
+        $scope.dismissModal = function() {
+
+            $('.modal').modal('hide');
+
+
+        };
+        $scope.showModal = function() {
+            //$(event.target).parent().parent().find(".modal").modal('show');
+            //$scope.newUserForm.$setPristine();
+
+
+        };
+        $scope.showUserModal = function(id) {
+            $(event.target).parent().parent().find(".modal").modal('show');
+            it = $scope.users.$getRecord(id);
+            lastNameInput = it.lastName;
+            firstNameInput = it.firstName;
+            peselInput = it.pesel;
+            birthInput = it.birthDate;
+            classInput = it.studentClass;
+            codeInput = it.postCode;
+            cityInput = it.city;
+            streetInput = it.street;
+            localInput = it.local;
+            phoneInput = it.phone;
+
+        }
+        $scope.cancelForm = function() {
+
+
+            it.lastName = lastNameInput;
+            it.firstName = firstNameInput;
+            it.pesel = peselInput;
+            it.birthDate = birthInput;
+            it.studentClass = classInput;
+            it.postCode = codeInput;
+            it.city = cityInput;
+            it.street = streetInput;
+            it.local = localInput;
+            it.phone = phoneInput;
+
+
+        };
+        
 
 
 
     });
-    var nameInput = $('.userNameEdit');
-    var textInput = $('.userTextEdit');
-
-
-
-    /*$('table').on("click", $(".glyphicon-pencil"), function(event) {
-
-        var pare = $(event.target).parent().parent();
-        nameInput.val(pare.find('.userName').html());
-        textInput.val(pare.find('.userText').html());
-        /*var targ = $(event.target);
-        if (targ.hasClass('glyphicon-pencil') || targ.hasClass('glyphicon-ok')) {
-            targ.toggleClass('glyphicon-pencil').toggleClass('glyphicon-ok').parent().parent().find('input').toggle().parent().parent().find('span').toggle();
-        }*/
-
-    //})
-
-
-
-
-
-    /*$("#add").on("click", function() {
-        myDataRef.push({
-            name: $("#name").val(),
-            text: $("#text").val()
-        });
-    })
-    $("u").on("click", function() {
-        console.log("click");
-
-    })
-    myDataRef.on('child_added', function(snapshot) {
-        var message = snapshot.val();
-        console.log(snapshot.val());
-        $("tbody").append("<tr><td>" + message.name + "</td><td>" + message.text + "</td><td><i class='glyphicon glyphicon-pencil'></i></td></tr>");
-    });*/
     </script>
 </body>
 
